@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReversiApi", "ReversiApi\ReversiApi.csproj", "{F381B0D8-A9F7-404F-BCE9-B60F19824C20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReversiApiTest", "ReversiApiTest\ReversiApiTest.csproj", "{B76658EB-A8B2-4573-9A60-78364068E100}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F381B0D8-A9F7-404F-BCE9-B60F19824C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F381B0D8-A9F7-404F-BCE9-B60F19824C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F381B0D8-A9F7-404F-BCE9-B60F19824C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F381B0D8-A9F7-404F-BCE9-B60F19824C20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B76658EB-A8B2-4573-9A60-78364068E100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B76658EB-A8B2-4573-9A60-78364068E100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B76658EB-A8B2-4573-9A60-78364068E100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B76658EB-A8B2-4573-9A60-78364068E100}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
