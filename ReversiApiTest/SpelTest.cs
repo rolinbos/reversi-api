@@ -3,12 +3,52 @@ using ReversiApi.Models;
 
 namespace ReversiApiTest;
 
+
+//     0 1 2 3 4 5 6 7
+//           v
+// 0   0 0 0 0 0 0 0 0  
+// 1   0 0 0 0 0 0 0 0
+// 2   0 0 0 2 1 0 0 0  <
+// 3   0 0 0 2 1 0 0 0
+// 4   0 0 0 2 1 0 0 0
+// 5   0 0 0 0 0 0 0 0
+// 6   0 0 0 0 0 0 0 0
+// 7   0 0 0 0 0 0 0 0
+
+
 [TestFixture]
 public class SpelTest
 {
      // geen kleur = 0
     // Wit = 1
     // Zwart = 2
+    
+    [Test]
+    public void ZettenZelfTest()
+    {
+        // Arrange
+        Spel spel = new Spel();
+        //     0 1 2 3 4 5 6 7
+        //           v
+        // 0   0 0 0 0 0 0 0 0  
+        // 1   0 0 0 0 0 0 0 0
+        // 2   0 0 0 2 1 0 0 0  <
+        // 3   0 0 0 2 1 0 0 0
+        // 4   0 0 0 2 1 0 0 0
+        // 5   0 0 0 0 0 0 0 0
+        // 6   0 0 0 0 0 0 0 0
+        // 7   0 0 0 0 0 0 0 0
+
+        // Act
+        spel.AandeBeurt = Kleur.Zwart;
+        var zet1 = spel.ZetMogelijk(2, 3);
+        Assert.IsTrue(zet1);
+
+        spel.AandeBeurt = Kleur.Wit;
+        var zet2 = spel.ZetMogelijk(2, 4);
+        Assert.IsTrue(zet2);
+    }
+    
 
     [Test]
     public void ZetMogelijk__BuitenBord_Exception()

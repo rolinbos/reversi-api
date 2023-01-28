@@ -41,9 +41,9 @@ public class Spel: ISpel
     
     private static string _convert(Kleur[,] bord) {
         string s = "";
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                Kleur kleur = bord[x, y];
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Kleur kleur = bord[row, col];
                 int v;
                 switch (kleur) {
                     default:
@@ -70,9 +70,9 @@ public class Spel: ISpel
     private static Kleur[,] _convert(string str) {
         Kleur[,] bord = new Kleur[8, 8];
 
-        int x = 0;
+        int row = 0;
         foreach (string line in str.Split(":")) {
-            int y = 0;
+            int col = 0;
             foreach (char c in line.ToCharArray()) {
                 Kleur kleur;
                 
@@ -89,12 +89,12 @@ public class Spel: ISpel
                         break;
                 }
 
-                bord[x, y] = kleur;
+                bord[row, col] = kleur;
                 
-                y++;
+                col++;
             }
 
-            x++;
+            row++;
         }
 
         return bord;
@@ -124,26 +124,16 @@ public class Spel: ISpel
         else
             WisselBeurt();
     }
-
-    // public bool Afgelopen()     // return true als geen van de spelers een zet kan doen
-    // {
-    //     if (this.IsErEenZetMogelijk(Kleur.Wit) || this.IsErEenZetMogelijk(Kleur.Zwart))
-    //     {
-    //         return false;
-    //     }
-    //
-    //     return true;
-    // }
-
-    // public bool IsNietAfgelopen()
-    // {
-    //     if (this.AandeBeurt is Kleur.Wit or Kleur.Zwart)
-    //     {
-    //         return true;
-    //     }
-    //
-    //     return false;
-    // }
+    
+    public bool Afgelopen()     // return true als geen van de spelers een zet kan doen
+    {
+        if (this.IsErEenZetMogelijk(Kleur.Wit) || this.IsErEenZetMogelijk(Kleur.Zwart))
+        {
+            return false;
+        }
+    
+        return true;
+    }
 
     public Kleur OverwegendeKleur()
     {
@@ -183,7 +173,7 @@ public class Spel: ISpel
 
         for (int i = 0; i < 8; i++)
         {
-            this.DraaiStenenVanTegenstanderInOpgegevenRichtingOmIndienIngesloten(rijZet, kolomZet, AandeBeurt, richting[i, 0], richting[i, 1]);
+            DraaiStenenVanTegenstanderInOpgegevenRichtingOmIndienIngesloten(rijZet, kolomZet, AandeBeurt, richting[i, 0], richting[i, 1]);
         }
 
         _bord[rijZet, kolomZet] = AandeBeurt;

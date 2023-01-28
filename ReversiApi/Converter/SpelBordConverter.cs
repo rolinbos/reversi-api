@@ -12,10 +12,10 @@ public class SpelBordConverter: JsonConverter<Kleur[,]>
 
     public override void Write(Utf8JsonWriter writer, Kleur[,] bord, JsonSerializerOptions options) {
         writer.WriteStartObject();
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                Kleur kleur = bord[y, x];
-                writer.WriteNumber(x + "," + y, kleur.GetHashCode());
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Kleur kleur = bord[row, col];
+                writer.WriteNumber(row + "," + col, kleur.GetHashCode());
             }
         }
 
