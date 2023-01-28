@@ -141,3 +141,7 @@
 /Users/rolin/Code/tasker/ReversiApi/ReversiApiTest/obj/Debug/net6.0/ReversiApiTest.pdb
 /Users/rolin/Code/tasker/ReversiApi/ReversiApiTest/obj/Debug/net6.0/ReversiApiTest.genruntimeconfig.cache
 /Users/rolin/Code/tasker/ReversiApi/ReversiApiTest/obj/Debug/net6.0/ref/ReversiApiTest.dll
+/Users/rolin/Code/tasker/ReversiApi/ReversiApiTest/bin/Debug/net6.0/System.Net.Http.Formatting.dll
+/Users/rolin/Code/tasker/ReversiApi/ReversiApiTest/bin/Debug/net6.0/System.Web.Http.dll
+/Users/rolin/Code/tasker/ReversiApi/ReversiApiTest/bin/Debug/net6.0/System.Web.Http.WebHost.dll
+/Users/rolin/Code/tasker/ReversiApi/ReversiApiTest/bin/Debug/net6.0/Newtonsoft.Json.Bson.dll

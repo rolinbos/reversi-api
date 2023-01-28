@@ -26,25 +26,24 @@ public class Spel: ISpel
     
     public string? Speler2Token { get; set; }
 
-    [NotMapped]
-    private Kleur[,] bord;
-    
+    [NotMapped] private Kleur[,] _bord;
+        
     [NotMapped]
     [JsonConverter(typeof(SpelBordConverter))]
-    public Kleur[,] Bord { get => bord; set => BordAsString = _convert(value); }
-    
+    public Kleur[,] Bord { get => _bord; set => BordAsString = _convert(value); }
+
     [JsonIgnore]
     public string BordAsString {
-        get => _convert(bord);
+        get => _convert(_bord);
 
-        set => bord = _convert(value);
+        set => _bord = _convert(value);
     }
-        
+    
     private static string _convert(Kleur[,] bord) {
         string s = "";
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
-                Kleur kleur = bord[y, x];
+                Kleur kleur = bord[x, y];
                 int v;
                 switch (kleur) {
                     default:
@@ -76,7 +75,7 @@ public class Spel: ISpel
             int y = 0;
             foreach (char c in line.ToCharArray()) {
                 Kleur kleur;
-                    
+                
                 switch (c) {
                     default:
                     case '0':
@@ -90,8 +89,8 @@ public class Spel: ISpel
                         break;
                 }
 
-                bord[y, x] = kleur;
-                    
+                bord[x, y] = kleur;
+                
                 y++;
             }
 
@@ -108,13 +107,13 @@ public class Spel: ISpel
         Token = Token.Replace("/", "q");    // slash mijden ivm het opvragen van een spel via een api obv het token
         Token = Token.Replace("+", "r");    // plus mijden ivm het opvragen van een spel via een api obv het token
 
-        Bord = new Kleur[bordOmvang, bordOmvang];
-        Bord[3, 3] = Kleur.Wit;
-        Bord[4, 4] = Kleur.Wit;
-        Bord[3, 4] = Kleur.Zwart;
-        Bord[4, 3] = Kleur.Zwart;
+        _bord = new Kleur[bordOmvang, bordOmvang];
+        _bord[3, 3] = Kleur.Wit;
+        _bord[4, 4] = Kleur.Wit;
+        _bord[3, 4] = Kleur.Zwart;
+        _bord[4, 3] = Kleur.Zwart;
 
-        AandeBeurt = Kleur.Geen;
+        AandeBeurt = Kleur.Zwart;
     }
 
     public void Pas()
@@ -126,25 +125,25 @@ public class Spel: ISpel
             WisselBeurt();
     }
 
-    public bool Afgelopen()     // return true als geen van de spelers een zet kan doen
-    {
-        if (this.IsErEenZetMogelijk(Kleur.Wit) || this.IsErEenZetMogelijk(Kleur.Zwart))
-        {
-            return false;
-        }
+    // public bool Afgelopen()     // return true als geen van de spelers een zet kan doen
+    // {
+    //     if (this.IsErEenZetMogelijk(Kleur.Wit) || this.IsErEenZetMogelijk(Kleur.Zwart))
+    //     {
+    //         return false;
+    //     }
+    //
+    //     return true;
+    // }
 
-        return true;
-    }
-
-    public bool IsNietAfgelopen()
-    {
-        if (this.AandeBeurt is Kleur.Wit or Kleur.Zwart)
-        {
-            return true;
-        }
-
-        return false;
-    }
+    // public bool IsNietAfgelopen()
+    // {
+    //     if (this.AandeBeurt is Kleur.Wit or Kleur.Zwart)
+    //     {
+    //         return true;
+    //     }
+    //
+    //     return false;
+    // }
 
     public Kleur OverwegendeKleur()
     {
@@ -154,9 +153,9 @@ public class Spel: ISpel
         {
             for (int kolomZet = 0; kolomZet < bordOmvang; kolomZet++)
             {
-                if (bord[rijZet, kolomZet] == Kleur.Wit)
+                if (_bord[rijZet, kolomZet] == Kleur.Wit)
                     aantalWit++;
-                else if (bord[rijZet, kolomZet] == Kleur.Zwart)
+                else if (_bord[rijZet, kolomZet] == Kleur.Zwart)
                     aantalZwart++;
             }
         }
@@ -176,15 +175,18 @@ public class Spel: ISpel
 
     public bool DoeZet(int rijZet, int kolomZet)
     {
-        if (this.ZetMogelijk(rijZet, kolomZet))
+        if (!this.ZetMogelijk(rijZet, kolomZet))
+        {
+            // throw new Exception($"Zet ({rijZet},{kolomZet}) is niet mogelijk!");
             return false;
+        }
 
         for (int i = 0; i < 8; i++)
         {
             this.DraaiStenenVanTegenstanderInOpgegevenRichtingOmIndienIngesloten(rijZet, kolomZet, AandeBeurt, richting[i, 0], richting[i, 1]);
         }
 
-        this.bord[rijZet, kolomZet] = AandeBeurt;
+        _bord[rijZet, kolomZet] = AandeBeurt;
 
         WisselBeurt();
 
@@ -249,7 +251,7 @@ public class Spel: ISpel
     private bool ZetOpBordEnNogVrij(int rijZet, int kolomZet)
     {
         // Als op het bord gezet wordt, en veld nog vrij, dan return true, anders false
-        return (PositieBinnenBordGrenzen(rijZet, kolomZet) && Bord[rijZet, kolomZet] == Kleur.Geen);
+        return (PositieBinnenBordGrenzen(rijZet, kolomZet) && _bord[rijZet, kolomZet] == Kleur.Geen);
     }
 
     private bool StenenInTeSluitenInOpgegevenRichting(int rijZet, int kolomZet, Kleur kleurZetter, int rijRichting, int kolomRichting)
@@ -269,7 +271,7 @@ public class Spel: ISpel
         // Bord[rij, kolom] ligt uiteindelijk buiten de bordgrenzen, of heeft niet meer de
         // de kleur van de tegenstander.
         // N.b.: deel achter && wordt alleen uitgevoerd als conditie daarvoor true is.
-        while (PositieBinnenBordGrenzen(rij, kolom) && Bord[rij, kolom] == kleurTegenstander)
+        while (PositieBinnenBordGrenzen(rij, kolom) && _bord[rij, kolom] == kleurTegenstander)
         {
             rij += rijRichting;
             kolom += kolomRichting;
@@ -280,7 +282,7 @@ public class Spel: ISpel
         // als alle drie onderstaande condities waar zijn, zijn er in de
         // opgegeven richting stenen in te sluiten.
         return (PositieBinnenBordGrenzen(rij, kolom) &&
-                Bord[rij, kolom] == kleurZetter &&
+                _bord[rij, kolom] == kleurZetter &&
                 aantalNaastGelegenStenenVanTegenstander > 0);
     }
 
@@ -300,9 +302,9 @@ public class Spel: ISpel
             // N.b.: je weet zeker dat je niet buiten het bord belandt,
             // omdat de stenen van de tegenstander ingesloten zijn door
             // een steen van degene die de zet doet.
-            while (Bord[rij, kolom] == kleurTegenstander)
+            while (_bord[rij, kolom] == kleurTegenstander)
             {
-                Bord[rij, kolom] = kleurZetter;
+                _bord[rij, kolom] = kleurZetter;
                 rij += rijRichting;
                 kolom += kolomRichting;
             }

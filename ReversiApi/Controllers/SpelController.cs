@@ -32,7 +32,7 @@ public class SpelController
     [HttpGet("van-gebruiker")]
     public IEnumerable<Spel> VanGebruiker(string Guuid)
     {
-        return _context.Spels.Where(spel => spel.Speler1Token == Guuid).ToList();
+        return _context.Spels.Where(spel => spel.Speler1Token == Guuid || spel.Speler2Token == Guuid).ToList();
     }
 
     [HttpGet("krijg-spel")]
@@ -62,7 +62,7 @@ public class SpelController
         Spel spel = new Spel()
         {
             Token = Guid.NewGuid().ToString(),
-            AandeBeurt = Kleur.Wit,
+            AandeBeurt = Kleur.Zwart,
             Speler1Token = spelerToken,
             Omschrijving = omschrijving
         };
@@ -83,12 +83,12 @@ public class SpelController
         if (spel == null) return null;
         if (spel.AandeBeurt == Kleur.Geen) return "GAMEOVER";
         
-        if (spel.AandeBeurt == Kleur.Wit)
+        if (spel.AandeBeurt == Kleur.Zwart)
         {
             if (spel.Speler1Token != token) return "NOTYOURTURN";
         }
         
-        if (spel.AandeBeurt == Kleur.Zwart)
+        if (spel.AandeBeurt == Kleur.Wit)
         {
             if (spel.Speler2Token != token) return "NOTYOURTURN";
         }
