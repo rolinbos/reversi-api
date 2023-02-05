@@ -14,7 +14,6 @@ public interface ISpel
 
     Kleur[,] Bord { get; set; }
     Kleur AandeBeurt { get; set; }
-    void Pas();
     bool Afgelopen();
 
     //welke kleur het meest voorkomend op het speelbord

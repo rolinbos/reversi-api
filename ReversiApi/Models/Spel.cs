@@ -25,6 +25,8 @@ public class Spel: ISpel
     public string Speler1Token { get; set; }
     
     public string? Speler2Token { get; set; }
+    public bool Speler1Read { get; set; } = false;
+    public bool Speler2Read { get; set; } = false;
 
     [NotMapped] private Kleur[,] _bord;
         
@@ -116,13 +118,18 @@ public class Spel: ISpel
         AandeBeurt = Kleur.Zwart;
     }
 
-    public void Pas()
+    public bool Pas()
     {
         // controleeer of er geen zet mogelijk is voor de speler die wil passen, alvorens van beurt te wisselen.
         if (IsErEenZetMogelijk(AandeBeurt))
-            throw new Exception("Passen mag niet, er is nog een zet mogelijk");
-        else
-            WisselBeurt();
+        {
+            // throw new Exception("Passen mag niet, er is nog een zet mogelijk");
+            return false;
+        }
+    
+        WisselBeurt();
+
+        return true;
     }
     
     public bool Afgelopen()     // return true als geen van de spelers een zet kan doen
@@ -131,7 +138,8 @@ public class Spel: ISpel
         {
             return false;
         }
-    
+
+        AandeBeurt = Kleur.Geen;
         return true;
     }
 

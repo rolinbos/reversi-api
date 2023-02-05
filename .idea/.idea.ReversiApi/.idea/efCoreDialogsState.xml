@@ -5,6 +5,7 @@
       <map>
         <entry key="Common:buildConfiguration" value="Debug" />
         <entry key="Common:dbContext" value="ReversiApi.Data.ApiDbContext" />
+        <entry key="Common:f381b0d8-a9f7-404f-bce9-b60f19824c20:dbContext" value="ReversiApi.Data.ApiDbContext" />
         <entry key="Common:noBuild" value="false" />
         <entry key="Common:outputFolder" value="Migrations" />
         <entry key="Common:useDefaultConnection" value="true" />
