@@ -29,8 +29,7 @@ public class SpelController
     {
         return _context.Spels.Where(
             spel =>
-                spel.Speler2Token == spelerToken || spel.Speler1Token == spelerToken 
-                && spel.AandeBeurt != Kleur.Geen 
+                spel.Speler2Token == spelerToken || spel.Speler1Token == spelerToken
                 && spel.Speler1Token != null || spel.Speler2Token != null || spel.Speler1Token != "" || spel.Speler2Token != "").ToList();
     }
     
@@ -43,6 +42,7 @@ public class SpelController
     [HttpGet("done")]
     public string Done(string token, string spelerToken)
     {
+        string message = "geen";
         Spel spel = _context.Spels.Where(spel => spel.Token == token).First();
 
         if (spel == null)
@@ -50,67 +50,53 @@ public class SpelController
             return "null";
         }
         
+        if (spel.Speler1Token == spelerToken && spel.Speler1Read || spel.Speler2Token == spelerToken && spel.Speler2Read)
+        {
+            return "geen";
+        }
+        
         Kleur winnendeKleur = spel.OverwegendeKleur();
 
-        if (spel.Speler1Token == spelerToken)
+        if (spel.Speler1Token == spelerToken && !spel.Speler1Read)
         {
-            // Speler1Read op true;
+            spel.Speler1Read = true;
         }
 
-        if (spel.Speler2Token == spelerToken)
+        if (spel.Speler2Token == spelerToken && !spel.Speler2Read)
         {
-            // Speler2Read op true;
+            spel.Speler2Read = true;
         }
-
-        // if (spel.speler1Read && spel.speler2Read)
-        // {
-            // _context.Spels.Remove(spel);
-        // }
-        _context.SaveChanges();
-        
         
         if (winnendeKleur == Kleur.Wit && spel.Speler2Token == spelerToken)
         {
-            return "gewonnen";
-        } 
-        
-        if (winnendeKleur == Kleur.Zwart && spel.Speler1Token == spelerToken)
+            message = "gewonnen";
+        }  else if (winnendeKleur == Kleur.Zwart && spel.Speler1Token == spelerToken)
         {
-            return "gewonnen";
+            message = "gewonnen";
+        } else if (winnendeKleur == Kleur.Wit && spel.Speler1Token == spelerToken || winnendeKleur == Kleur.Zwart && spel.Speler2Token == spelerToken)
+        {
+            message = "verloren";
         }
-        
-        
-        return "gelijk-spel";
+        else
+        {
+            message = "gelijk-spel";
+        }
 
+        _context.SaveChanges();
 
-        //     DoneResponse doneResponse = new DoneResponse()
-        // {
-        //     Speler1 = spel.Speler1Token,
-        //     Speler2 = spel.Speler2Token,
-        // };
-        //
-        // if (winnendeKleur == Kleur.Wit)
-        // {
-        //     doneResponse.Speler2Gewonnen = true;
-        // } else if (winnendeKleur == Kleur.Zwart)
-        // {
-        //     doneResponse.Speler1Gewonnen = true;
-        // }
-        // else
-        // {
-        //     doneResponse.GelijkSpel = true;
-        // }
-        //
-        // _context.Spels.Remove(spel);
-        // _context.SaveChanges();
-        //
-        // return doneResponse;
+        if (spel.Speler1Read && spel.Speler2Read)
+        {
+            _context.Remove(spel);
+            _context.SaveChanges();
+        }
+
+        return message;
     }
     
     [HttpGet("krijg-spel")]
     public ActionResult<Spel> KrijgSpel(string token)
     {
-        return _context.Spels.First(spel => spel.Token == token && spel.AandeBeurt != Kleur.Geen);
+        return _context.Spels.First(spel => spel.Token == token && !spel.Speler1Read || !spel.Speler2Read);
     }
     
     [HttpPost("join")]
