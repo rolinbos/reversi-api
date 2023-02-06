@@ -143,6 +143,32 @@ public class Spel: ISpel
         return true;
     }
 
+    public List<KeyValuePair<Kleur, int>> statistieken()
+    {
+        var list = new List<KeyValuePair<Kleur, int>>();
+        int aantalWit = 0;
+        int aantalZwart = 0;
+        int aantalLeeg = 0;
+        for (int rijZet = 0; rijZet < bordOmvang; rijZet++)
+        {
+            for (int kolomZet = 0; kolomZet < bordOmvang; kolomZet++)
+            {
+                if (_bord[rijZet, kolomZet] == Kleur.Wit)
+                    aantalWit++;
+                else if (_bord[rijZet, kolomZet] == Kleur.Zwart)
+                    aantalZwart++;
+                else
+                    aantalLeeg++;
+            }
+        }
+        
+        list.Add(new KeyValuePair<Kleur, int>(Kleur.Wit, aantalWit));
+        list.Add(new KeyValuePair<Kleur, int>(Kleur.Zwart, aantalZwart));
+        list.Add(new KeyValuePair<Kleur, int>(Kleur.Geen, aantalLeeg));
+
+        return list;
+    }
+
     public Kleur OverwegendeKleur()
     {
         int aantalWit = 0;

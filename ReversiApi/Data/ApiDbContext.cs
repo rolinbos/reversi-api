@@ -9,4 +9,5 @@ public class ApiDbContext: DbContext
     {}
     
     public DbSet<Spel> Spels { get; set; }
+    public DbSet<SpelGegevens> SpelGegevens { get; set; }
 }

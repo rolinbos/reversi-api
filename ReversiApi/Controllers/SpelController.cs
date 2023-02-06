@@ -33,6 +33,16 @@ public class SpelController
                 && spel.Speler1Token != null || spel.Speler2Token != null || spel.Speler1Token != "" || spel.Speler2Token != "").ToList();
     }
     
+    [HttpGet("statistieken")]
+    public List<List<SpelGegevens>> Statistieken(string token)
+    {
+        return _context.SpelGegevens.Where(gegevens => gegevens.spelToken == token)
+            .ToList()
+            .GroupBy(e => e.datum)
+            .Select(e => e.ToList())
+            .ToList();
+    }
+    
     [HttpGet("van-gebruiker")]
     public IEnumerable<Spel> VanGebruiker(string Guuid)
     {
@@ -87,6 +97,9 @@ public class SpelController
         if (spel.Speler1Read && spel.Speler2Read)
         {
             _context.Remove(spel);
+            _context.SaveChanges();
+
+            _context.SpelGegevens.RemoveRange(_context.SpelGegevens.Where(gegevens => gegevens.spelToken == token).ToList());
             _context.SaveChanges();
         }
 
@@ -161,9 +174,46 @@ public class SpelController
             status = 602,
             message = "Deze zet kan niet gezet worden",
         };
-            
+        
         _context.SaveChanges();
+        
+        // Statistieken
+        List<SpelGegevens> spelGegevensList = new List<SpelGegevens>();
+        DateTime date = DateTime.Now;
+
+        foreach (KeyValuePair<Kleur, int> e in spel.statistieken())
+        {
+            SpelGegevens spelGegevens = new SpelGegevens();
+            spelGegevens.spelToken = id;
+            spelGegevens.datum = date;
             
+            if (e.Key == Kleur.Geen)
+            {
+                spelGegevens.waarde = e.Value.ToString();
+                spelGegevens.spelerToken = "geen";
+                spelGegevens.type = "aantal-leeg";
+            }
+
+            if (e.Key == Kleur.Wit)
+            {
+                spelGegevens.waarde = e.Value.ToString();
+                spelGegevens.spelerToken = spel.Speler2Token;
+                spelGegevens.type = "aantal-wit";
+            }
+
+            if (e.Key == Kleur.Zwart)
+            {
+                spelGegevens.waarde = e.Value.ToString();
+                spelGegevens.spelerToken = spel.Speler1Token;
+                spelGegevens.type = "aantal-zwart";
+            }
+            
+            spelGegevensList.Add(spelGegevens);
+        }
+
+        _context.SpelGegevens.AddRange(spelGegevensList);
+        _context.SaveChanges();
+        
         return new DoeZetResponse()
         {
             status = 200,
