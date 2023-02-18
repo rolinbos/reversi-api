@@ -250,6 +250,22 @@ public class SpelController
             message = "OK",
         };
     }
+    
+    [HttpPost("verwijder-spellen-van-speler")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult VerwijderSpellenVanSpeler([FromForm] string spelerToken)
+    {
+        if (spelerToken == null)
+        {
+            return new NotFoundResult();
+        }
+        
+        _context.Spels.RemoveRange(_context.Spels.Where(spel => spel.Speler1Token == spelerToken || spel.Speler2Token == spelerToken).ToList());
+        _context.SaveChanges();
+
+        return new OkObjectResult("it works");
+    }
 
     [HttpPost("overslaan")]
     public ActionResult<DoeZetResponse> Overslaan([FromForm] string id, [FromForm] string token) {
