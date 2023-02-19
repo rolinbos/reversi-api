@@ -8,7 +8,7 @@ using ReversiApi.Responses;
 namespace ReversiApi.Controllers;
 
 [ApiController]
-[Route("api/spel")]
+[Route("spel")]
 public class SpelController
 {
     private readonly ApiDbContext _context;
