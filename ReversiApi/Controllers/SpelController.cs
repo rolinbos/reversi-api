@@ -109,7 +109,7 @@ public class SpelController
     [HttpGet("krijg-spel")]
     public ActionResult<Spel> KrijgSpel(string token)
     {
-        return _context.Spels.First(spel => spel.Token == token && !spel.Speler1Read || !spel.Speler2Read);
+        return _context.Spels.First(spel => spel.Token == token && (!spel.Speler1Read || !spel.Speler2Read));
     }
     
     [HttpPost("join")]
